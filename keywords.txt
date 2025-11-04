@@ -1,0 +1,60 @@
+zkcash
+zk
+zero knowledge
+zero
+ztc
+zec
+ZKCASH
+ZK
+ZERO KNOWLEDGE
+ZERO
+ZTC
+ZEC
+Z
+z
+
+# Zcash-specific keywords
+zcash
+shielded
+sapling
+sprout
+orchard
+privacy coin
+zaddr
+taddr
+transparent
+z-address
+t-address
+zcash privacy
+zcash shielded
+
+# ZK Proof keywords
+zk-snark
+zk-stark
+zk proof
+zkproof
+zero-knowledge
+snark
+stark
+groth16
+plonk
+bulletproof
+trusted setup
+circuit
+constraint system
+zk rollup
+zkrollup
+zkvm
+zk circuit
+zero knowledge proof
+privacy protocol
+privacy
+private
+confidential
+anonymous
+shielded transaction
+private transaction
+confidential transaction
+ZIP 227
+ZIP
+227
