@@ -72,14 +72,21 @@ export class DiscordWebhook {
       };
 
       const links: string[] = [];
-      if (website && website !== '' && website !== '[object Object]' && website.startsWith('http')) {
-        links.push(`[Website](${website})`);
+      
+      const isValidUrl = (url: string): boolean => {
+        if (!url || url === '' || url === '[object Object]') return false;
+        const trimmed = url.trim();
+        return trimmed.startsWith('http://') || trimmed.startsWith('https://');
+      };
+
+      if (isValidUrl(website)) {
+        links.push(`[Website](${website.trim()})`);
       }
-      if (twitter && twitter !== '' && twitter !== '[object Object]' && twitter.startsWith('http')) {
-        links.push(`[Twitter](${twitter})`);
+      if (isValidUrl(twitter)) {
+        links.push(`[Twitter](${twitter.trim()})`);
       }
-      if (telegram && telegram !== '' && telegram !== '[object Object]' && telegram.startsWith('http')) {
-        links.push(`[Telegram](${telegram})`);
+      if (isValidUrl(telegram)) {
+        links.push(`[Telegram](${telegram.trim()})`);
       }
       
       if (links.length > 0) {

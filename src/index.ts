@@ -44,8 +44,6 @@ function handleMessage(message: NATSMessage): void {
 
   if (message.subject === 'advancedNewCoinCreated' || message.subject.startsWith('advancedNewCoinCreated')) {
     handleNewCoin(message.data);
-  } else if (message.subject === 'advancedCoinGraduated') {
-    handleCoinGraduated(message.data);
   } else if (message.subject.startsWith('advancedTrade.') || message.subject.startsWith('pumpSwapTrade.')) {
     handleTradeEvent(message.data);
   } else if (message.subject === 'unifiedTradeEvent.processed') {
@@ -71,7 +69,7 @@ function handleNewCoin(data: any): void {
 
   if (!name && !ticker) {
     console.log('Skipping - no name/ticker found');
-    console.log('   Raw data:', JSON.stringify(coinData, null, 2).substring(0, 200));
+    console.log('Raw data:', JSON.stringify(coinData, null, 2).substring(0, 200));
     return;
   }
 
@@ -85,28 +83,25 @@ function handleNewCoin(data: any): void {
   }
 }
 
-function handleCoinGraduated(data: any): void {
-  if (!data) return;
-
-  const name = data.name || data.symbol || data.tokenName || '';
-  const ticker = data.ticker || data.symbol || data.tokenSymbol || name;
-
-  if (!name && !ticker) {
-    return;
-  }
-
-  console.log(`Coin graduated: ${name} (${ticker})`);
-
-  if (keywordMatcher.matches(name, ticker)) {
-    console.log(`Match found! Name: ${name}, Ticker: ${ticker}`);
-    sendCoinAlert('Coin Graduated', name, ticker, data);
-  }
-}
-
 function handleTradeEvent(data: any): void {
 }
 
 function sendCoinAlert(eventType: string, name: string, ticker: string, data: any): void {
+  // Extract URLs properly - handle both string and object formats
+  const getUrl = (value: any): string => {
+    if (!value) return '';
+    if (typeof value === 'string') return value.trim();
+    if (typeof value === 'object' && value !== null) {
+      // If it's an object, try to extract URL from common properties
+      return (value.url || value.href || value.link || '').toString().trim();
+    }
+    return '';
+  };
+
+  const website = getUrl(data.website || data.websiteUrl || data.links?.website || '');
+  const twitter = getUrl(data.twitter || data.twitterUrl || data.links?.twitter || data.socials?.twitter || '');
+  const telegram = getUrl(data.telegram || data.telegramUrl || data.links?.telegram || data.socials?.telegram || '');
+
   const pairData = [
     data.mint || data.address || '',
     '',
@@ -115,9 +110,9 @@ function sendCoinAlert(eventType: string, name: string, ticker: string, data: an
     data.imageUrl || data.image || '',
     6,
     'Pump.fun',
-    {},
-    '',
-    '',
+    website,
+    twitter,
+    telegram,
     '',
     '',
     0,
@@ -141,7 +136,7 @@ function handleError(error: Error): void {
   console.error('WebSocket error:', error);
 }
 
-console.log('Starting Pump.fun NATS WebSocket Monitor...');
+console.log('Starting Pump.fun Monitor...');
 console.log(`Keywords file: ${KEYWORDS_FILE}`);
 console.log(`WebSocket URL: ${WEBSOCKET_URL}`);
 console.log(`Loaded keywords: ${keywordMatcher.getKeywords().join(', ') || 'None'}`);

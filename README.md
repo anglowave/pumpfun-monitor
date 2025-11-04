@@ -160,7 +160,6 @@ The keyword matcher is case-insensitive and checks both the token name and ticke
 This application uses the NATS (NATS Messaging) protocol over WebSocket. It:
 - Sends CONNECT command with authentication credentials
 - Subscribes to the `advancedNewCoinCreated` subject
-- Handles PING/PONG for keep-alive
 - Parses MSG protocol messages
 - Automatically reconnects on connection loss
 

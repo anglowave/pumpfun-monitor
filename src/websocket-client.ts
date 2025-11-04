@@ -170,9 +170,6 @@ export class NATSWebSocketClient {
             onMessage(message);
           }
         }
-      } else if (line.startsWith('PING')) {
-        console.log('Received PING, sending PONG');
-        this.sendRaw('PONG\r\n');
       } else if (line.startsWith('INFO')) {
         console.log('NATS INFO:', line);
       } else if (line.startsWith('+OK')) {
