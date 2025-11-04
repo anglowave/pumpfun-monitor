@@ -1,16 +1,15 @@
 # Pump.fun Token Monitor
 
-A TypeScript application that monitors Pump.fun's NATS WebSocket for new token creation events and sends Discord alerts when tokens match keywords related to Zcash, zero-knowledge proofs, and privacy coins.
+A TypeScript application that monitors Pump.fun's NATS WebSocket for new token creation events and sends Discord alerts when tokens match your configured keywords.
 
 ## Features
 
-- 🔌 NATS WebSocket connection to `wss://prod-advanced.nats.realtime.pump.fun/`
+- 🔌 NATS WebSocket connection to Pump.fun's real-time feed
 - 📊 Monitors `advancedNewCoinCreated` events
 - 🔍 Keyword matching from text file (case-insensitive)
 - 📢 Discord webhook notifications with token information
 - 🔄 Automatic reconnection on disconnect
 - 📝 Hot-reload of keywords file (no restart needed)
-- 🎯 Special handling for standalone "Z" ticker/name
 
 ## Setup
 
@@ -49,26 +48,19 @@ npm run dev
 
 ### 3. Configure Keywords
 
-Edit `keywords.txt` and add keywords you want to monitor (one per line). The file comes pre-configured with Zcash and zero-knowledge proof related keywords.
+Edit `keywords.txt` and add keywords you want to monitor (one per line).
 
 Example keywords:
 ```
-zkcash
-zk
-zero knowledge
-zec
-zcash
-shielded
-privacy
-zk-snark
-zk-stark
+example
+keyword
+test
 ```
 
 - Lines starting with `#` are treated as comments
 - Empty lines are ignored
 - Matching is case-insensitive
 - The bot checks if the token name OR ticker contains any keyword
-- Special case: Standalone "Z" or "z" as the entire name or ticker will match
 
 ### 4. Build and Run
 
@@ -92,7 +84,6 @@ npm start
    - Extracts the token name and ticker
    - Checks if they match any keyword from `keywords.txt`
    - If matched, sends a formatted Discord webhook with token information
-   - Pings a specified user ID in Discord
 
 ## Discord Webhook Format
 
@@ -102,7 +93,6 @@ The Discord notification includes:
 - AMM type (Pump.fun)
 - Links (website, Twitter, Telegram) if available
 - Token image thumbnail if available
-- User ping notification
 
 **Note:** Market data (price, volume, market cap, holders) is not included in the notification.
 
@@ -123,7 +113,7 @@ The Discord notification includes:
 │   ├── websocket-client.ts   # NATS WebSocket client with auto-reconnect
 │   ├── keyword-matcher.ts    # Keyword matching logic
 │   └── discord-webhook.ts   # Discord webhook integration
-├── keywords.txt              # Keywords file (editable, includes Zcash/ZK keywords)
+├── keywords.txt              # Keywords file (editable)
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -140,12 +130,7 @@ All configuration can be done via environment variables (in `.env` file or set d
 
 ## Keyword Matching
 
-The keyword matcher is case-insensitive and checks both the token name and ticker. It includes:
-
-- **Zcash-specific keywords**: zcash, zec, shielded, sapling, sprout, orchard, zaddr, taddr, etc.
-- **ZK proof keywords**: zk-snark, zk-stark, groth16, plonk, bulletproof, circuit, zk rollup, etc.
-- **Privacy keywords**: privacy, private, confidential, anonymous, shielded transaction, etc.
-- **Special handling**: Standalone "Z" or "z" as the entire name or ticker will match
+The keyword matcher is case-insensitive and checks both the token name and ticker. Simply add your keywords to `keywords.txt`, one per line. The matcher will check if any keyword appears in the token's name or ticker symbol.
 
 ## Troubleshooting
 
